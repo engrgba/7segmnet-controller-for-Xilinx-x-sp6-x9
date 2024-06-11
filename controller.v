@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company:  Teresol Pvt Ltd
+// Engineer: Gul Bahar Ali
 // 
 // Create Date:    11:08:31 05/24/2024 
-// Design Name: 
+// Design Name:    
 // Module Name:    Wishbone_Controller 
 // Project Name: 
-// Target Devices: 
+// Target Devices: Xilinx X-SP6-X9
 // Tool versions: 
 // Description: 
 //
@@ -20,18 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Wishbone_Controller(
         input wire  i_clk,
-		  input wire  i_uart_rx,
-		  output	wire o_uart_tx,
+        input wire  i_uart_rx,
+        output wire o_uart_tx,
 		  
-		  output wire [6:0]a_to_g,
-		  output wire [7:0]en,
+	output wire [6:0] a_to_g,
+	output wire [7:0] en,
 
 		
 
         output reg         o_wb_we,
         output reg         o_wb_cyc,
         output reg         o_wb_stb,
-		  output reg  [3:0]  o_wb_sel,
+	output reg  [3:0]  o_wb_sel,
         output reg  [1:0]  o_wb_addr,
         output reg  [31:0] o_wb_data
 		  
@@ -49,14 +49,14 @@ reg  [31:0] rx_data_reg5 = 32'd0;
 reg  [31:0] rx_data_reg6 = 32'd0;
 reg  [31:0] rx_data_reg7 = 32'd0;
 
-reg  [2:0]  byte_num = 3'd0;
-reg [7:0]enable = 8'd0;
-reg [2:0]en_count = 3'd0;
-reg [19:0] clk_counter = 20'd0;
-reg  [7:0]index_data = 8'd0;
-wire [7:0] data;
+reg  [2:0]  byte_num      = 3'd0;
+reg [7:0]   enable        = 8'd0;
+reg [2:0]   en_count      = 3'd0;
+reg [19:0]  clk_counter   = 20'd0;
+reg  [7:0]  index_data    = 8'd0;
+wire [7:0]  data;
 
-reg [25:0] t_a_time = 26'd0; 
+reg [25:0] t_a_time      = 26'd0; 
 
  
   wbuart wbu(
@@ -103,7 +103,7 @@ begin
 									o_wb_sel   <= 4'b1111;
 									o_wb_we    <= 1'b1;
 									o_wb_stb   <= 1'b1;
-                           o_wb_cyc   <= 1'b1;
+                                                                        o_wb_cyc   <= 1'b1;
 									o_wb_addr  <= 2'b00;
 									o_wb_data  <= 32'd434;
 									t_a_time   <= 26'd0;
@@ -145,7 +145,7 @@ begin
 							  o_wb_addr  <= 2'b10;
 							  state      <= Ack;
 						 end
-		Ack://5
+		Ack://4
 					begin
 						if(i_wb_ack)
 								if(i_wb_data[8] == 1'b0)			//whenever core gives valid data, display that on 7 segments and do not read until
@@ -186,7 +186,7 @@ begin
 						else state <= Ack;					 
 						
 					end	
-			UART_TX:
+			UART_TX://5
 						begin
 								o_wb_we      <= 1'b1; 
 								o_wb_cyc     <= 1'b1;
@@ -211,7 +211,7 @@ begin
 											begin o_wb_data    <= rx_data_reg7; byte_num <= byte_num + 1; state  <= UART_TX_ACK;  end
 						end
 						
-			UART_TX_ACK:
+			UART_TX_ACK://6
 						begin
 								o_wb_stb     <= 1'b0;
 								if(i_wb_ack)
@@ -226,7 +226,7 @@ begin
 								else state       <= UART_TX_ACK;
 						end
 						
-		Turn_Around_time://4
+		Turn_Around_time://7
 						begin
 							if(t_a_time == 26'd1500)				//wait for 30us after each byte received whether valid or invalid
 								begin
@@ -235,8 +235,8 @@ begin
 								end
 							else   
 								begin
-											t_a_time <= t_a_time+1;
-											 state   <= Turn_Around_time;
+									t_a_time <= t_a_time+1;
+									state    <= Turn_Around_time;
 								end
 						end
 		
