@@ -79,12 +79,12 @@ wire [35:0]CONTROL0;
 
 						
 localparam IDLE        			 	= 3'd0,//states
-			  UART_SETUP   			= 3'd1,
+			  UART_SETUP   		= 3'd1,
 			  Setup_wait            = 3'd2,
 			  UART_RX               = 3'd3,
-			  Ack          			= 3'd4,
-			  UART_TX					= 3'd5,
-			  UART_TX_ACK				= 3'd6,
+			  Ack          		= 3'd4,
+			  UART_TX		= 3'd5,
+			  UART_TX_ACK		= 3'd6,
 			  Turn_Around_time      = 3'd7;
 			  
 			  
@@ -202,7 +202,7 @@ begin
 								 else if(byte_num == 3'd3)
 											begin o_wb_data    <= rx_data_reg3; byte_num <= byte_num + 1; state  <= UART_TX_ACK;  end
 								 else if(byte_num == 3'd4)
-										   begin o_wb_data    <= rx_data_reg4; byte_num <= byte_num + 1; state  <= UART_TX_ACK;  end
+										        begin o_wb_data    <= rx_data_reg4; byte_num <= byte_num + 1; state  <= UART_TX_ACK;  end
 								 else if(byte_num == 3'd5)
 											begin o_wb_data    <= rx_data_reg5; byte_num <= byte_num + 1; state  <= UART_TX_ACK;  end
 								 else if(byte_num == 3'd6)
